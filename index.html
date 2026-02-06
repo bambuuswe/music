@@ -1301,43 +1301,61 @@
         }
 
         // Search Function
-        async function performSearch(query) {
-            showLoading();
-            
-            try {
-                // Använd YouTube Data API för att söka
-                // Ersätt med faktiskt API-anrop när du har en API-nyckel
-                // För demo använder vi en proxy eller mock
-                
-                const searchQuery = encodeURIComponent(query + ' music');
-                
-                // Alternativ 1: Använd en CORS-proxy (för utveckling)
-                // const response = await fetch(`https://cors-anywhere.herokuapp.com/https://www.googleapis.com/youtube/v3/search?part=snippet&q=${searchQuery}&type=video&videoCategoryId=10&maxResults=25&key=${API_KEY}`);
-                
-                // Alternativ 2: Använd invidious instans (öppen API)
-                const response = await fetch(`https://vid.puffyan.us/api/v1/search?q=${searchQuery}&type=video`);
-                const data = await response.json();
-                
-                searchResults = data.map(item => ({
-                    videoId: item.videoId,
-                    title: item.title,
-                    channel: item.author,
-                    thumbnail: item.videoThumbnails?.[0]?.url || `https://i.ytimg.com/vi/${item.videoId}/mqdefault.jpg`,
-                    duration: item.lengthSeconds,
-                    published: item.publishedText
-                }));
-                
-                displayResults(searchResults);
-            } catch (error) {
-                console.error('Search error:', error);
-                // Fallback: visa meddelande om att användaren behöver API-nyckel
-                showToast('Sökning kräver API-konfiguration', 'error');
-                showEmptyState();
-            } finally {
-                hideLoading();
-            }
-        }
+      async function performSearch(query) {
+    showLoading();
+    
+    try {
+        let searchQuery = query;
+        if (currentFilter === 'live') searchQuery += ' live';
+        else if (currentFilter === 'song') searchQuery += ' audio';
+        
+        const response = await fetch(
+            `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(searchQuery)}&type=video&videoCategoryId=10&maxResults=25&key=${API_KEY}`
+        );
+        
+        if (!response.ok) throw new Error('API Error');
+        
+        const data = await response.json();
+        
+        // Hämta videodetaljer (längd) i separat anrop
+        const videoIds = data.items.map(item => item.id.videoId).join(',');
+        const detailsResponse = await fetch(
+            `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds}&key=${API_KEY}`
+        );
+        const detailsData = await detailsResponse.json();
+        
+        // Kombinera data
+        const durationMap = {};
+        detailsData.items.forEach(item => {
+            durationMap[item.id] = parseDuration(item.contentDetails.duration);
+        });
+        
+        searchResults = data.items.map(item => ({
+            videoId: item.id.videoId,
+            title: item.snippet.title,
+            channel: item.snippet.channelTitle,
+            thumbnail: item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default.url,
+            duration: durationMap[item.id.videoId] || 0,
+            published: item.snippet.publishedAt
+        }));
+        
+        displayResults(searchResults);
+    } catch (error) {
+        console.error('Search error:', error);
+        showToast('Sökning misslyckades. Kontrollera API-nyckel.', 'error');
+        showEmptyState();
+    } finally {
+        hideLoading();
+    }
+}
 
+function parseDuration(isoDuration) {
+    const match = isoDuration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+    const hours = (match[1] ? parseInt(match[1]) : 0);
+    const minutes = (match[2] ? parseInt(match[2]) : 0);
+    const seconds = (match[3] ? parseInt(match[3]) : 0);
+    return hours * 3600 + minutes * 60 + seconds;
+}
         // Display Results
         function displayResults(results) {
             if (results.length === 0) {
