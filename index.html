@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BMBU Music Player - Musikupptäckt</title>
+    <title>BMBU MusikSpelare</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -13,64 +13,184 @@
         }
 
         :root {
-            --spotify-black: #121212;
-            --spotify-dark: #181818;
-            --spotify-darker: #000000;
-            --spotify-green: #1db954;
-            --spotify-green-hover: #1ed760;
-            --spotify-grey: #b3b3b3;
-            --spotify-light-grey: #535353;
-            --spotify-white: #ffffff;
+            --bg-primary: #121212;
+            --bg-secondary: #181818;
+            --bg-tertiary: #282828;
+            --bg-darker: #000000;
+            --accent-color: #e22134;
+            --accent-hover: #ff2d4a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #535353;
         }
 
         body {
             font-family: 'Circular', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: var(--spotify-black);
-            color: var(--spotify-white);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* Header & Navigation */
-        .header {
-            background: linear-gradient(to bottom, #191414 0%, var(--spotify-black) 100%);
-            padding: 20px 40px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        /* Layout */
+        .app-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
         }
 
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background-color: var(--bg-darker);
+            padding: 24px 12px;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 24px;
+            overflow-y: auto;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--spotify-white);
+            gap: 12px;
+            padding: 0 12px;
             text-decoration: none;
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: bold;
         }
 
-        .logo i {
-            color: var(--spotify-green);
-            font-size: 32px;
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-color), #ff6b6b);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
         }
 
-        /* Search Section */
-        .search-container {
+        .nav-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: var(--bg-secondary);
+            margin: 8px 12px;
+        }
+
+        .playlist-section {
             flex: 1;
-            max-width: 600px;
-            margin: 0 40px;
+            overflow-y: auto;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            margin-bottom: 12px;
+        }
+
+        .section-title-small {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 0.1em;
+        }
+
+        .create-playlist-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 20px;
+            padding: 4px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .create-playlist-btn:hover {
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+            transform: scale(1.1);
+        }
+
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .playlist-item:hover, .playlist-item.active {
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+        }
+
+        .playlist-item i {
+            font-size: 16px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+            background: linear-gradient(to bottom, #1a1a1a 0%, var(--bg-primary) 300px);
+        }
+
+        /* Header */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+
+        .search-container {
             position: relative;
+            flex: 1;
+            max-width: 400px;
         }
 
         .search-box {
@@ -78,15 +198,16 @@
             padding: 12px 20px 12px 45px;
             border-radius: 25px;
             border: none;
-            background-color: var(--spotify-white);
-            color: var(--spotify-darker);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
             font-size: 14px;
             outline: none;
             transition: all 0.3s ease;
         }
 
         .search-box:focus {
-            box-shadow: 0 0 0 2px var(--spotify-green);
+            box-shadow: 0 0 0 2px var(--accent-color);
+            background-color: var(--bg-tertiary);
         }
 
         .search-icon {
@@ -94,62 +215,149 @@
             left: 18px;
             top: 50%;
             transform: translateY(-50%);
-            color: #757575;
+            color: var(--text-secondary);
         }
 
-        .search-filters {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            justify-content: center;
-        }
-
-        .filter-btn {
-            padding: 6px 16px;
-            border-radius: 20px;
-            border: 1px solid var(--spotify-light-grey);
-            background: transparent;
-            color: var(--spotify-grey);
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background-color: var(--spotify-light-grey);
-            color: var(--spotify-white);
-            border-color: var(--spotify-light-grey);
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 30px 40px;
-            overflow-y: auto;
-        }
-
-        .section-title {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 20px;
+        .user-menu {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 16px;
         }
 
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-color), #ff6b6b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Content Sections */
+        .content-header {
+            margin-bottom: 24px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        /* Playlist Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background-color: var(--bg-secondary);
+            padding: 32px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .modal h2 {
+            margin-bottom: 24px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--text-muted);
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 12px 32px;
+            border-radius: 25px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--text-muted);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-primary);
+            transform: scale(1.02);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            transform: scale(1.02);
+        }
+
+        /* Results Grid */
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 24px;
             margin-bottom: 40px;
         }
 
         .track-card {
-            background-color: var(--spotify-dark);
+            background-color: var(--bg-secondary);
             padding: 16px;
             border-radius: 8px;
             cursor: pointer;
@@ -159,9 +367,8 @@
         }
 
         .track-card:hover {
-            background-color: #282828;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background-color: var(--bg-tertiary);
+            transform: translateY(-4px);
         }
 
         .album-art-container {
@@ -171,7 +378,7 @@
             margin-bottom: 16px;
             border-radius: 4px;
             overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         }
 
         .album-art {
@@ -191,7 +398,7 @@
             right: 8px;
             width: 48px;
             height: 48px;
-            background-color: var(--spotify-green);
+            background-color: var(--accent-color);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -209,7 +416,34 @@
         }
 
         .play-overlay:hover {
-            background-color: var(--spotify-green-hover);
+            background-color: var(--accent-hover);
+            transform: scale(1.1);
+        }
+
+        .add-to-playlist-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 32px;
+            height: 32px;
+            background-color: rgba(0,0,0,0.6);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .track-card:hover .add-to-playlist-btn {
+            opacity: 1;
+        }
+
+        .add-to-playlist-btn:hover {
+            background-color: var(--accent-color);
             transform: scale(1.1);
         }
 
@@ -224,29 +458,190 @@
 
         .track-info p {
             font-size: 14px;
-            color: var(--spotify-grey);
+            color: var(--text-secondary);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .track-meta {
-            font-size: 12px;
-            color: var(--spotify-light-grey);
-            margin-top: 8px;
+        /* Playlist View */
+        .playlist-view {
+            display: none;
+        }
+
+        .playlist-view.active {
+            display: block;
+        }
+
+        .playlist-header {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+            padding: 24px;
+            background: linear-gradient(to bottom, var(--bg-tertiary), transparent);
+            border-radius: 8px;
+        }
+
+        .playlist-cover {
+            width: 232px;
+            height: 232px;
+            background: linear-gradient(135deg, var(--accent-color), #ff6b6b);
+            border-radius: 4px;
             display: flex;
             align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            color: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .playlist-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .playlist-type {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .playlist-title {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .playlist-meta {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .playlist-actions {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            align-items: center;
+        }
+
+        .play-btn-large {
+            width: 56px;
+            height: 56px;
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 16px rgba(226, 33, 52, 0.3);
+        }
+
+        .play-btn-large:hover {
+            background-color: var(--accent-hover);
+            transform: scale(1.05);
+        }
+
+        .delete-playlist-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 20px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .delete-playlist-btn:hover {
+            color: var(--accent-color);
+            background-color: rgba(226, 33, 52, 0.1);
+        }
+
+        /* Track List */
+        .track-list {
+            display: flex;
+            flex-direction: column;
             gap: 8px;
         }
 
-        .explicit-badge {
-            background-color: var(--spotify-light-grey);
-            color: var(--spotify-black);
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
+        .track-list-item {
+            display: grid;
+            grid-template-columns: 50px 1fr 100px 60px;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .track-list-item:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .track-list-item.playing {
+            background-color: rgba(226, 33, 52, 0.1);
+        }
+
+        .track-number {
+            color: var(--text-secondary);
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .track-list-item.playing .track-number {
+            color: var(--accent-color);
+        }
+
+        .track-list-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .track-list-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .track-list-details h4 {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .track-list-details p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .track-duration {
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-align: right;
+        }
+
+        .track-remove {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .track-list-item:hover .track-remove {
+            opacity: 1;
+        }
+
+        .track-remove:hover {
+            color: var(--accent-color);
         }
 
         /* Loading & Empty States */
@@ -263,8 +658,8 @@
         .spinner {
             width: 50px;
             height: 50px;
-            border: 4px solid var(--spotify-light-grey);
-            border-top-color: var(--spotify-green);
+            border: 4px solid var(--text-muted);
+            border-top-color: var(--accent-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
@@ -277,19 +672,19 @@
         .empty-state {
             text-align: center;
             padding: 80px 20px;
-            color: var(--spotify-grey);
+            color: var(--text-secondary);
         }
 
         .empty-state i {
             font-size: 64px;
             margin-bottom: 20px;
-            color: var(--spotify-light-grey);
+            color: var(--text-muted);
         }
 
         .empty-state h2 {
             font-size: 24px;
             margin-bottom: 10px;
-            color: var(--spotify-white);
+            color: var(--text-primary);
         }
 
         /* Player Bar */
@@ -298,8 +693,8 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background-color: var(--spotify-darker);
-            border-top: 1px solid #282828;
+            background-color: var(--bg-darker);
+            border-top: 1px solid var(--bg-secondary);
             padding: 16px 24px;
             display: flex;
             align-items: center;
@@ -327,12 +722,12 @@
         .now-playing-info h4 {
             font-size: 14px;
             margin-bottom: 4px;
-            color: var(--spotify-white);
+            color: var(--text-primary);
         }
 
         .now-playing-info p {
             font-size: 12px;
-            color: var(--spotify-grey);
+            color: var(--text-secondary);
         }
 
         .player-controls {
@@ -353,7 +748,7 @@
         .control-btn {
             background: none;
             border: none;
-            color: var(--spotify-grey);
+            color: var(--text-secondary);
             cursor: pointer;
             font-size: 20px;
             transition: all 0.2s ease;
@@ -361,15 +756,15 @@
         }
 
         .control-btn:hover {
-            color: var(--spotify-white);
+            color: var(--text-primary);
             transform: scale(1.1);
         }
 
         .control-btn.play-pause {
             width: 40px;
             height: 40px;
-            background-color: var(--spotify-white);
-            color: var(--spotify-black);
+            background-color: var(--text-primary);
+            color: var(--bg-darker);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -378,8 +773,8 @@
         }
 
         .control-btn.play-pause:hover {
-            background-color: var(--spotify-green);
-            color: var(--spotify-white);
+            background-color: var(--accent-color);
+            color: white;
             transform: scale(1.05);
         }
 
@@ -389,13 +784,13 @@
             align-items: center;
             gap: 12px;
             font-size: 11px;
-            color: var(--spotify-grey);
+            color: var(--text-secondary);
         }
 
         .progress-bar {
             flex: 1;
             height: 4px;
-            background-color: var(--spotify-light-grey);
+            background-color: var(--text-muted);
             border-radius: 2px;
             cursor: pointer;
             position: relative;
@@ -404,11 +799,15 @@
 
         .progress-fill {
             height: 100%;
-            background-color: var(--spotify-white);
+            background-color: var(--text-primary);
             border-radius: 2px;
             width: 0%;
             transition: width 0.1s linear;
             position: relative;
+        }
+
+        .progress-bar:hover .progress-fill {
+            background-color: var(--accent-color);
         }
 
         .progress-fill::after {
@@ -419,7 +818,7 @@
             transform: translateY(-50%);
             width: 12px;
             height: 12px;
-            background-color: var(--spotify-white);
+            background-color: var(--text-primary);
             border-radius: 50%;
             opacity: 0;
             transition: opacity 0.2s ease;
@@ -442,7 +841,7 @@
         .volume-slider {
             width: 100px;
             height: 4px;
-            background-color: var(--spotify-light-grey);
+            background-color: var(--text-muted);
             border-radius: 2px;
             cursor: pointer;
             position: relative;
@@ -450,10 +849,14 @@
 
         .volume-fill {
             height: 100%;
-            background-color: var(--spotify-white);
+            background-color: var(--text-primary);
             border-radius: 2px;
             width: 70%;
             transition: width 0.1s ease;
+        }
+
+        .volume-slider:hover .volume-fill {
+            background-color: var(--accent-color);
         }
 
         /* Toast Notification */
@@ -461,8 +864,8 @@
             position: fixed;
             top: 100px;
             right: 30px;
-            background-color: var(--spotify-green);
-            color: var(--spotify-black);
+            background-color: var(--accent-color);
+            color: white;
             padding: 16px 24px;
             border-radius: 8px;
             font-weight: 600;
@@ -479,45 +882,7 @@
             transform: translateX(0);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header {
-                padding: 15px 20px;
-            }
-
-            .search-container {
-                margin: 0 20px;
-            }
-
-            .main-content {
-                padding: 20px;
-            }
-
-            .results-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 16px;
-            }
-
-            .player-bar {
-                padding: 12px 16px;
-                height: 80px;
-            }
-
-            .now-playing {
-                width: 40%;
-            }
-
-            .volume-controls {
-                display: none;
-            }
-        }
-
-        /* Animations */
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
+        /* Playing Indicator */
         .playing-indicator {
             display: flex;
             gap: 3px;
@@ -527,7 +892,7 @@
 
         .playing-indicator span {
             width: 3px;
-            background-color: var(--spotify-green);
+            background-color: var(--accent-color);
             animation: sound 1s ease-in-out infinite;
             border-radius: 1px;
         }
@@ -541,69 +906,185 @@
             50% { transform: scaleY(0.5); }
         }
 
-        .track-card.playing .album-art-container::before {
-            content: '';
+        /* Add to Playlist Dropdown */
+        .playlist-dropdown {
             position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.4);
-            z-index: 5;
+            top: 40px;
+            right: 8px;
+            background-color: var(--bg-secondary);
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            padding: 8px 0;
+            min-width: 200px;
+            display: none;
+            z-index: 100;
         }
 
-        .track-card.playing .playing-indicator {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 6;
+        .playlist-dropdown.active {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .logo span, .nav-item span, .section-header, .playlist-item span {
+                display: none;
+            }
+            
+            .playlist-cover {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .playlist-title {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                padding: 16px;
+            }
+            
+            .results-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 16px;
+            }
+            
+            .player-bar {
+                padding: 12px 16px;
+            }
+            
+            .volume-controls {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="nav-container">
-            <a href="#" class="logo">
-                <i class="fab fa-spotify"></i>
-                <span>Spotify MVP</span>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="#" class="logo" onclick="showHome()">
+                <div class="logo-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+                <span>BMBU</span>
             </a>
-            
-            <div class="search-container">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-box" id="searchInput" placeholder="Sök efter låtar, artister eller album...">
-                <div class="search-filters">
-                    <button class="filter-btn active" data-filter="all">Allt</button>
-                    <button class="filter-btn" data-filter="song">Låtar</button>
-                    <button class="filter-btn" data-filter="album">Album</button>
-                    <button class="filter-btn" data-filter="artist">Artister</button>
+
+            <nav class="nav-section">
+                <button class="nav-item active" onclick="showHome()">
+                    <i class="fas fa-home"></i>
+                    <span>Hem</span>
+                </button>
+                <button class="nav-item" onclick="focusSearch()">
+                    <i class="fas fa-search"></i>
+                    <span>Sök</span>
+                </button>
+                <button class="nav-item" onclick="showLibrary()">
+                    <i class="fas fa-book"></i>
+                    <span>Ditt bibliotek</span>
+                </button>
+            </nav>
+
+            <div class="divider"></div>
+
+            <div class="playlist-section">
+                <div class="section-header">
+                    <span class="section-title-small">Spellistor</span>
+                    <button class="create-playlist-btn" onclick="openPlaylistModal()" title="Skapa spellista">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <div id="playlistContainer">
+                    <!-- Playlists will be rendered here -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-box" id="searchInput" placeholder="Vad vill du lyssna på?">
+                </div>
+                <div class="user-menu">
+                    <div class="user-avatar">B</div>
                 </div>
             </div>
 
-            <div style="width: 150px;"></div> <!-- Spacer for balance -->
-        </div>
-    </header>
+            <!-- Home/Search View -->
+            <div id="homeView">
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner"></div>
+                    <p>Söker...</p>
+                </div>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="loading-spinner" id="loadingSpinner">
-            <div class="spinner"></div>
-            <p>Söker efter musik...</p>
-        </div>
+                <div class="empty-state" id="emptyState">
+                    <i class="fas fa-music"></i>
+                    <h2>Börja upptäcka musik</h2>
+                    <p>Sök efter artister, låtar eller album för att börja lyssna</p>
+                </div>
 
-        <div class="empty-state" id="emptyState">
-            <i class="fas fa-music"></i>
-            <h2>Börja upptäcka musik</h2>
-            <p>Sök efter dina favoritartister, låtar eller album för att börja lyssna på 30-sekunders previews</p>
-        </div>
+                <div id="searchResults" style="display: none;">
+                    <h2 class="page-title">Sökresultat</h2>
+                    <div class="results-grid" id="resultsGrid"></div>
+                </div>
+            </div>
 
-        <div id="searchResults" style="display: none;">
-            <h2 class="section-title">
-                <i class="fas fa-search"></i>
-                Sökresultat <span id="resultCount" style="color: var(--spotify-grey); font-size: 18px; margin-left: 10px;"></span>
-            </h2>
-            <div class="results-grid" id="resultsGrid"></div>
-        </div>
-    </main>
+            <!-- Playlist View -->
+            <div class="playlist-view" id="playlistView">
+                <div class="playlist-header">
+                    <div class="playlist-cover" id="playlistCover">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div class="playlist-info">
+                        <span class="playlist-type">Spellista</span>
+                        <h1 class="playlist-title" id="playlistViewTitle">Min Spellista</h1>
+                        <p class="playlist-meta">
+                            <span id="playlistTrackCount">0 låtar</span> • 
+                            <span id="playlistDuration">0 min</span>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="playlist-actions">
+                    <button class="play-btn-large" onclick="playPlaylist()">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="delete-playlist-btn" onclick="deleteCurrentPlaylist()" title="Ta bort spellista">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+
+                <div class="track-list" id="playlistTrackList">
+                    <!-- Tracks will be rendered here -->
+                </div>
+            </div>
+        </main>
+    </div>
 
     <!-- Player Bar -->
     <div class="player-bar" id="playerBar" style="display: none;">
@@ -652,10 +1133,38 @@
         </div>
     </div>
 
+    <!-- Create Playlist Modal -->
+    <div class="modal-overlay" id="playlistModal">
+        <div class="modal">
+            <h2>Skapa ny spellista</h2>
+            <div class="form-group">
+                <label for="playlistNameInput">Namn på spellista</label>
+                <input type="text" id="playlistNameInput" placeholder="Min nya spellista" maxlength="50">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closePlaylistModal()">Avbryt</button>
+                <button class="btn btn-primary" onclick="createPlaylist()">Skapa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add to Playlist Modal -->
+    <div class="modal-overlay" id="addToPlaylistModal">
+        <div class="modal">
+            <h2>Lägg till i spellista</h2>
+            <div id="addToPlaylistList" style="max-height: 300px; overflow-y: auto;">
+                <!-- Playlists will be listed here -->
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeAddToPlaylistModal()">Avbryt</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div class="toast" id="toast">
         <i class="fas fa-check-circle"></i>
-        <span id="toastMessage">Åtgärd slutförd</span>
+        <span id="toastMessage"></span>
     </div>
 
     <script>
@@ -663,18 +1172,18 @@
         let currentTrack = null;
         let isPlaying = false;
         let audio = new Audio();
-        let currentFilter = 'all';
         let searchResults = [];
         let currentTrackIndex = 0;
+        let playlists = JSON.parse(localStorage.getItem('bmbu_playlists')) || [];
+        let currentPlaylistId = null;
+        let trackToAdd = null;
 
         // DOM Elements
         const searchInput = document.getElementById('searchInput');
-        const filterBtns = document.querySelectorAll('.filter-btn');
         const loadingSpinner = document.getElementById('loadingSpinner');
         const emptyState = document.getElementById('emptyState');
         const searchResultsSection = document.getElementById('searchResults');
         const resultsGrid = document.getElementById('resultsGrid');
-        const resultCount = document.getElementById('resultCount');
         const playerBar = document.getElementById('playerBar');
         const playPauseBtn = document.getElementById('playPauseBtn');
         const progressBar = document.getElementById('progressBar');
@@ -682,6 +1191,13 @@
         const currentTimeEl = document.getElementById('currentTime');
         const volumeSlider = document.getElementById('volumeSlider');
         const volumeFill = document.getElementById('volumeFill');
+        const playlistContainer = document.getElementById('playlistContainer');
+        const homeView = document.getElementById('homeView');
+        const playlistView = document.getElementById('playlistView');
+
+        // Initialize
+        renderPlaylists();
+        audio.volume = 0.7;
 
         // Event Listeners
         let searchTimeout;
@@ -696,30 +1212,12 @@
             }
         });
 
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentFilter = btn.dataset.filter;
-                
-                const query = searchInput.value.trim();
-                if (query) {
-                    performSearch(query);
-                }
-            });
-        });
-
         // Search Function
         async function performSearch(query) {
             showLoading();
             
             try {
-                let entity = 'musicTrack';
-                if (currentFilter === 'album') entity = 'album';
-                else if (currentFilter === 'artist') entity = 'musicArtist';
-                else if (currentFilter === 'all') entity = 'musicTrack,album,musicArtist';
-
-                const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=${entity}&limit=50&country=SE`);
+                const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=musicTrack&limit=50&country=SE`);
                 const data = await response.json();
                 
                 searchResults = data.results;
@@ -742,12 +1240,8 @@
                         <p>Försök med en annan sökterm</p>
                     </div>
                 `;
-                resultCount.textContent = '(0)';
             } else {
-                resultCount.textContent = `(${results.length})`;
-                
                 resultsGrid.innerHTML = results.map((track, index) => {
-                    const isTrack = track.wrapperType === 'track' || track.kind === 'song';
                     const isPlayingClass = (currentTrack && currentTrack.trackId === track.trackId) ? 'playing' : '';
                     const playingIndicator = (currentTrack && currentTrack.trackId === track.trackId && isPlaying) ? 
                         '<div class="playing-indicator"><span></span><span></span><span></span></div>' : '';
@@ -756,37 +1250,35 @@
                         <div class="track-card ${isPlayingClass}" onclick="playTrack(${index})">
                             <div class="album-art-container">
                                 <img src="${track.artworkUrl100 || track.artworkUrl60 || 'https://via.placeholder.com/100'}" 
-                                     alt="${track.collectionName || track.artistName}" 
+                                     alt="${track.trackName}" 
                                      class="album-art">
                                 ${playingIndicator}
                                 <div class="play-overlay">
-                                    <i class="fas fa-play" style="color: var(--spotify-black); margin-left: 2px;"></i>
+                                    <i class="fas fa-play" style="color: white; margin-left: 2px;"></i>
                                 </div>
+                                <button class="add-to-playlist-btn" onclick="event.stopPropagation(); openAddToPlaylistModal(${index})" title="Lägg till i spellista">
+                                    <i class="fas fa-plus"></i>
+                                </button>
                             </div>
                             <div class="track-info">
-                                <h3>${track.trackName || track.collectionName || track.artistName}</h3>
+                                <h3>${track.trackName}</h3>
                                 <p>${track.artistName}</p>
-                                ${isTrack ? `
-                                    <div class="track-meta">
-                                        <span>${formatTime(track.trackTimeMillis)}</span>
-                                        ${track.trackExplicitness === 'explicit' ? '<span class="explicit-badge">Explicit</span>' : ''}
-                                    </div>
-                                ` : ''}
                             </div>
                         </div>
                     `;
                 }).join('');
             }
             
+            showHome();
             emptyState.style.display = 'none';
             searchResultsSection.style.display = 'block';
         }
 
         // Play Track
-        function playTrack(index) {
-            const track = searchResults[index];
+        function playTrack(index, fromPlaylist = false) {
+            const track = fromPlaylist ? playlists.find(p => p.id === currentPlaylistId).tracks[index] : searchResults[index];
             if (!track.previewUrl) {
-                showToast('Ingen förhandslyssning tillgänglig för denna låt', 'error');
+                showToast('Ingen förhandslyssning tillagänglig', 'error');
                 return;
             }
 
@@ -799,10 +1291,13 @@
             
             updatePlayerUI();
             showPlayer();
-            showToast(`Spelar: ${track.trackName}`, 'success');
             
-            // Update display to show playing state
-            displayResults(searchResults);
+            // Update display
+            if (!fromPlaylist) {
+                displayResults(searchResults);
+            } else {
+                renderPlaylistTracks();
+            }
         }
 
         // Player Controls
@@ -819,7 +1314,12 @@
                 isPlaying = true;
             }
             updatePlayerUI();
-            displayResults(searchResults);
+            
+            if (currentPlaylistId) {
+                renderPlaylistTracks();
+            } else {
+                displayResults(searchResults);
+            }
         }
 
         function updatePlayerUI() {
@@ -834,7 +1334,6 @@
 
         function showPlayer() {
             playerBar.style.display = 'flex';
-            document.body.style.paddingBottom = '90px';
         }
 
         // Audio Events
@@ -842,9 +1341,14 @@
         audio.addEventListener('ended', () => {
             isPlaying = false;
             updatePlayerUI();
-            displayResults(searchResults);
             progressFill.style.width = '0%';
             currentTimeEl.textContent = '0:00';
+            
+            if (currentPlaylistId) {
+                renderPlaylistTracks();
+            } else {
+                displayResults(searchResults);
+            }
         });
 
         function updateProgress() {
@@ -882,20 +1386,241 @@
                                '<i class="fas fa-volume-up"></i>';
         });
 
-        // Previous/Next (simulated - plays random from results)
+        // Previous/Next
         document.getElementById('prevBtn').addEventListener('click', () => {
-            if (searchResults.length > 0) {
+            if (currentPlaylistId) {
+                const playlist = playlists.find(p => p.id === currentPlaylistId);
+                currentTrackIndex = (currentTrackIndex - 1 + playlist.tracks.length) % playlist.tracks.length;
+                playTrack(currentTrackIndex, true);
+            } else if (searchResults.length > 0) {
                 currentTrackIndex = (currentTrackIndex - 1 + searchResults.length) % searchResults.length;
                 playTrack(currentTrackIndex);
             }
         });
 
         document.getElementById('nextBtn').addEventListener('click', () => {
-            if (searchResults.length > 0) {
+            if (currentPlaylistId) {
+                const playlist = playlists.find(p => p.id === currentPlaylistId);
+                currentTrackIndex = (currentTrackIndex + 1) % playlist.tracks.length;
+                playTrack(currentTrackIndex, true);
+            } else if (searchResults.length > 0) {
                 currentTrackIndex = (currentTrackIndex + 1) % searchResults.length;
                 playTrack(currentTrackIndex);
             }
         });
+
+        // Playlist Functions
+        function openPlaylistModal() {
+            document.getElementById('playlistModal').classList.add('active');
+            document.getElementById('playlistNameInput').focus();
+        }
+
+        function closePlaylistModal() {
+            document.getElementById('playlistModal').classList.remove('active');
+            document.getElementById('playlistNameInput').value = '';
+        }
+
+        function createPlaylist() {
+            const name = document.getElementById('playlistNameInput').value.trim();
+            if (!name) {
+                showToast('Ange ett namn för spellistan', 'error');
+                return;
+            }
+
+            const playlist = {
+                id: Date.now(),
+                name: name,
+                tracks: [],
+                createdAt: new Date().toISOString()
+            };
+
+            playlists.push(playlist);
+            savePlaylists();
+            renderPlaylists();
+            closePlaylistModal();
+            showToast(`Spellistan "${name}" skapad!`);
+        }
+
+        function renderPlaylists() {
+            if (playlists.length === 0) {
+                playlistContainer.innerHTML = '<p style="padding: 0 12px; color: var(--text-secondary); font-size: 14px;">Inga spellistor än</p>';
+                return;
+            }
+
+            playlistContainer.innerHTML = playlists.map(playlist => `
+                <div class="playlist-item ${currentPlaylistId === playlist.id ? 'active' : ''}" onclick="showPlaylist(${playlist.id})">
+                    <i class="fas fa-music"></i>
+                    <span>${playlist.name}</span>
+                </div>
+            `).join('');
+        }
+
+        function showPlaylist(id) {
+            currentPlaylistId = id;
+            const playlist = playlists.find(p => p.id === id);
+            
+            document.getElementById('playlistViewTitle').textContent = playlist.name;
+            document.getElementById('playlistTrackCount').textContent = `${playlist.tracks.length} låtar`;
+            
+            const totalDuration = playlist.tracks.reduce((sum, track) => sum + (track.trackTimeMillis || 0), 0);
+            document.getElementById('playlistDuration').textContent = formatDuration(totalDuration);
+            
+            renderPlaylistTracks();
+            
+            homeView.style.display = 'none';
+            playlistView.classList.add('active');
+            renderPlaylists(); // Update active state
+            
+            // Update nav
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        }
+
+        function renderPlaylistTracks() {
+            const playlist = playlists.find(p => p.id === currentPlaylistId);
+            const trackList = document.getElementById('playlistTrackList');
+            
+            if (playlist.tracks.length === 0) {
+                trackList.innerHTML = `
+                    <div class="empty-state" style="padding: 40px;">
+                        <i class="fas fa-music" style="font-size: 48px;"></i>
+                        <p>Spellistan är tom. Lägg till låtar från sökresultaten!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            trackList.innerHTML = playlist.tracks.map((track, index) => `
+                <div class="track-list-item ${currentTrack && currentTrack.trackId === track.trackId ? 'playing' : ''}" onclick="playTrack(${index}, true)">
+                    <div class="track-number">
+                        ${currentTrack && currentTrack.trackId === track.trackId && isPlaying ? 
+                            '<div class="playing-indicator" style="height: 12px;"><span style="height: 6px;"></span><span style="height: 12px;"></span><span style="height: 9px;"></span></div>' : 
+                            index + 1}
+                    </div>
+                    <div class="track-list-info">
+                        <img src="${track.artworkUrl60 || track.artworkUrl100}" alt="" class="track-list-img">
+                        <div class="track-list-details">
+                            <h4>${track.trackName}</h4>
+                            <p>${track.artistName}</p>
+                        </div>
+                    </div>
+                    <div class="track-duration">${formatTime(track.trackTimeMillis, true)}</div>
+                    <button class="track-remove" onclick="event.stopPropagation(); removeFromPlaylist(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeFromPlaylist(index) {
+            const playlist = playlists.find(p => p.id === currentPlaylistId);
+            const track = playlist.tracks[index];
+            playlist.tracks.splice(index, 1);
+            savePlaylists();
+            renderPlaylistTracks();
+            showToast(`Tog bort "${track.trackName}" från spellistan`);
+            
+            // Update counts
+            document.getElementById('playlistTrackCount').textContent = `${playlist.tracks.length} låtar`;
+            const totalDuration = playlist.tracks.reduce((sum, track) => sum + (track.trackTimeMillis || 0), 0);
+            document.getElementById('playlistDuration').textContent = formatDuration(totalDuration);
+        }
+
+        function deleteCurrentPlaylist() {
+            if (!confirm('Är du säker på att du vill ta bort denna spellista?')) return;
+            
+            playlists = playlists.filter(p => p.id !== currentPlaylistId);
+            savePlaylists();
+            currentPlaylistId = null;
+            renderPlaylists();
+            showHome();
+            showToast('Spellistan borttagen');
+        }
+
+        function playPlaylist() {
+            const playlist = playlists.find(p => p.id === currentPlaylistId);
+            if (playlist.tracks.length === 0) {
+                showToast('Spellistan är tom', 'error');
+                return;
+            }
+            playTrack(0, true);
+        }
+
+        // Add to Playlist
+        function openAddToPlaylistModal(trackIndex) {
+            trackToAdd = searchResults[trackIndex];
+            
+            if (playlists.length === 0) {
+                showToast('Skapa en spellista först!', 'error');
+                return;
+            }
+
+            const list = document.getElementById('addToPlaylistList');
+            list.innerHTML = playlists.map(playlist => `
+                <div class="dropdown-item" onclick="addTrackToPlaylist(${playlist.id})">
+                    <i class="fas fa-music" style="margin-right: 12px;"></i>
+                    ${playlist.name}
+                </div>
+            `).join('');
+
+            document.getElementById('addToPlaylistModal').classList.add('active');
+        }
+
+        function closeAddToPlaylistModal() {
+            document.getElementById('addToPlaylistModal').classList.remove('active');
+            trackToAdd = null;
+        }
+
+        function addTrackToPlaylist(playlistId) {
+            const playlist = playlists.find(p => p.id === playlistId);
+            
+            // Check if track already exists
+            if (playlist.tracks.some(t => t.trackId === trackToAdd.trackId)) {
+                showToast('Låten finns redan i spellistan', 'error');
+                closeAddToPlaylistModal();
+                return;
+            }
+
+            playlist.tracks.push(trackToAdd);
+            savePlaylists();
+            
+            if (currentPlaylistId === playlistId) {
+                renderPlaylistTracks();
+                document.getElementById('playlistTrackCount').textContent = `${playlist.tracks.length} låtar`;
+                const totalDuration = playlist.tracks.reduce((sum, track) => sum + (track.trackTimeMillis || 0), 0);
+                document.getElementById('playlistDuration').textContent = formatDuration(totalDuration);
+            }
+            
+            closeAddToPlaylistModal();
+            showToast(`Lade till "${trackToAdd.trackName}" i "${playlist.name}"`);
+        }
+
+        function savePlaylists() {
+            localStorage.setItem('bmbu_playlists', JSON.stringify(playlists));
+        }
+
+        // Navigation
+        function showHome() {
+            homeView.style.display = 'block';
+            playlistView.classList.remove('active');
+            currentPlaylistId = null;
+            renderPlaylists();
+            
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.nav-item').classList.add('active');
+        }
+
+        function focusSearch() {
+            searchInput.focus();
+            showHome();
+        }
+
+        function showLibrary() {
+            if (playlists.length > 0) {
+                showPlaylist(playlists[0].id);
+            } else {
+                showToast('Skapa en spellista först!', 'error');
+            }
+        }
 
         // Helper Functions
         function formatTime(millis, short = false) {
@@ -918,9 +1643,18 @@
             return `${minutes}:${seconds.toString().padStart(2, '0')}`;
         }
 
+        function formatDuration(millis) {
+            const minutes = Math.floor(millis / 60000);
+            if (minutes < 60) return `${minutes} min`;
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours} tim ${mins} min`;
+        }
+
         function showLoading() {
             loadingSpinner.classList.add('active');
             searchResultsSection.style.display = 'none';
+            emptyState.style.display = 'none';
         }
 
         function hideLoading() {
@@ -937,7 +1671,7 @@
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toastMessage');
             
-            toast.style.backgroundColor = type === 'error' ? '#e22134' : 'var(--spotify-green)';
+            toast.style.backgroundColor = type === 'error' ? '#535353' : 'var(--accent-color)';
             toastMessage.textContent = message;
             
             toast.classList.add('show');
@@ -946,8 +1680,22 @@
             }, 3000);
         }
 
-        // Initialize volume
-        audio.volume = 0.7;
+        // Close modals on outside click
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
+                e.preventDefault();
+                togglePlay();
+            }
+        });
     </script>
 </body>
 </html>
